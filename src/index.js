@@ -2,15 +2,53 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 
-class Square extends React.Component {
-    render() {
-        return <button className="square">{/* TODO */}</button>
-    }
+// class Square extends React.Component {
+//     // Boardで管理するため、初期設定としてのconstructorがいらなくなった
+//     // constructor(props) {
+//     //     super(props)
+//     //     this.state = {
+//     //         value: null,
+//     //     }
+//     // }
+//     render() {
+//         return (
+//             // renderSquereからpropsとして受け取るため、this.propsを使う
+//             <button className="square" onClick={() => this.props.onClick()}>
+//                 {this.props.value}
+//             </button>
+//         )
+//     }
+// }
+
+// render()しか持たないクラスを簡単に書く方法を使って、Squereを書く
+function Square(props) {
+    return (
+        // renderSquereからpropsとして受け取るため、propsを使う
+        <button className="square" onClick={() => props.onClick()}>
+            {props.value}
+        </button>
+    )
 }
 
 class Board extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            squares: Array(9).fill(null),
+        }
+    }
+
+    handleClick(i) {
+        // squaresの配列のコピーを作る
+        const squares = this.state.squares.slice()
+        squares[i] = 'X'
+        // ↑の変更が反映されたsqueresで上書きする
+        this.setState({ squares: squares })
+    }
+
     renderSquare(i) {
-        return <Square />
+        // この関数からSquareにpropsとして、2つの値(value, onClick)を渡す
+        return <Square value={this.state.squares[i]} onClick={() => this.handleClick(i)} />
     }
 
     render() {
